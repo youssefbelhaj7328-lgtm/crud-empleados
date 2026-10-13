@@ -126,15 +126,16 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	public void persistirEmpleado(Empleado empleado, List<String> numeroTelefono, List<String> direccionesCorreo) throws SQLException {
 		// TODO Auto-generated method stub
 		
-		DBConexion dbConexion = new DBConexion("root","Temp2026");
-		try {
+		
+		try(DBConexion dbConexion = new DBConexion("root" ,"Temp2026");
+				Connection connection = dbConexion .getConexion();) {
 			
-			Connection connection = dbConexion .getConexion();
+			
 			dbConexion.persistirEmpleado(connection, empleado,
 					numeroTelefono, direccionesCorreo);
 			
 			
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	

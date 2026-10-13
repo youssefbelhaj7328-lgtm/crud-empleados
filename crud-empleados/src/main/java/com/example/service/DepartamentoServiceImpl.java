@@ -15,13 +15,14 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 	public List<Departamento> getDepartamentos() throws SQLException {
 		// TODO Auto-generated method stub
 		// Conectar con la capa DAO
-		DBConexion dbConexion = new DBConexion("root", "Temp2026");
+		
 		List<Departamento> departamentos = new ArrayList<>();
 		ResultSet rs = null;
-		Connection connection = null;
+		//Connection connection = null;
 
-		try {
-			connection = dbConexion.getConexion();
+		try (DBConexion dbConexion = new DBConexion("root", "Temp2026");
+				Connection connection = dbConexion.getConexion();)  {
+			 
 			 rs= dbConexion.getDepartamentos(connection);
 			// Recorrer el ResultSet, que es la variable rs, y crear 
 			// una lista de departamentos 
@@ -34,23 +35,11 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 					e.printStackTrace();
 				}
 				 
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
-		} finally {
-
-		}
-		if (connection != null)
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		{
-
-		}
+		} 
 		return departamentos;
 
 	}
