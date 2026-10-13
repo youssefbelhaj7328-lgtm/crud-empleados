@@ -11,4 +11,12 @@ public interface EmpleadoService {
 	 * tienen cuerpo, tienen que ser implementados por una clase concreta, en
 	 * este caso la clase se le acostumbra a llamar EmpleadoServiceImpl */
 	List<Empleado> dameEmpleados() throws SQLException;
+	// metodo para persistir un empleo
+	 public abstract void persistirEmpleado(Empleado empleado,
+			 List<String> numeroTelefono ,List<String> direccionesCorreo)
+					 throws SQLException;
+			 
+			
+	
+	
 }

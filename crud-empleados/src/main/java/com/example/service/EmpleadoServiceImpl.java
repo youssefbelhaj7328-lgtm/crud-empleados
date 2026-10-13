@@ -15,10 +15,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 	@Override
 	public List<Empleado> dameEmpleados() throws SQLException {
 		
-		
+	
+		/**
+		* La sentencia siguiente se puede comentar porque se implementara en el bloque
+		* try-with-resources
+		*/	
 		/* Crear una instancia, que es lo mismo que crear un objeto
 		 * de la clase DBConexion */
-		DBConexion dbConexion = new DBConexion("root", "Temp2026");
+		//DBConexion dbConexion = new DBConexion("root", "Temp2026");
 	
 		/* Mediante la innstancia anterior, es decir el objeto dbConexion,
 		 * podemos acceder a los metodos de instancia que se encuentran en 
@@ -27,17 +31,35 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		/* Llamada o invocacion del metodo que realiza la coneccion a la base 
 		 * datos */
 		
-		Connection connection = null;
+		//Connection connection = null;
 		ResultSet rs = null;
 		List<Empleado> empleados = new ArrayList<Empleado>();
-		
-		try {
+
+		/**
+		* El bloque try-with-rosources es la forma moderna de cerrar un recurso, una vez
+		* que hemos terminado de trabajar con el, y se hace de forma automatica una vez 
+		* que se llega al final del bloque try.
+		* 
+		* Para que se pueda cerrar el recurso de forma automatica el mismo tiene que implementar
+		* la interface AutoCloseable o Closeable.
+		* 
+		* ¿Que es un recurso? Cualquier cosa (conexion a una base de datos, una conexion de red,
+		* un archivo) que tiene que ser devuelta una vez que hemos terminado de trabajar con 
+		* la misma.
+		* 
+		* ¿Donde de ubica el recurso que se tiene que cerrar al terminar el bloque try?
+		* 
+		* Se ubica entre parentesis despues de el try
+		* 
+		*/		
+		try (DBConexion dbConexion = new DBConexion("root", "Temp2026");
+				Connection connection = dbConexion.getConexion()){
 			/* La sentencia siguiente crea una conexion a la base datos que un 
 			 * recurso que deber ser liberado cuando termines de utilizar
 			 * 
 			 * Un recurso es algo que hay que liberar cuando termines de trabajar 
 			 * con el, por ejemplo, un fichero, una conexion de red, etc. */
-			connection = dbConexion.getConexion();
+			//connection = dbConexion.getConexion();
 			
 			/* Invocacion o llamada del metodo de instancia getEmpleados, 
 			 * que se encuetra en la capa DAO, justo en la clase DBConexion */
@@ -79,7 +101,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		    		 								null,
 		    			rs.getBigDecimal("salario"),
 		 Genero.valueOf(rs.getString("genero")),
-		    			rs.getString("foto"));
+		    			rs.getString("foto"),
+		    			rs.getInt("departamentos_id"));
 		    			
 		    	// Con el objeto empleado creado se lo podemos pasar como parametro
 		    	// al metodo add(), a continuacion, para ir agregando empleado, 
@@ -88,25 +111,35 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		    	empleados.add(empleado);
 		    }
 		    
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			
-			/* La o las sentencias que esten dentro del bloque finally se 
-			 * garantiza que se ejecuten ya sea que todo ha ido bien o que
-			 * se ha producido un error, una exception. Por lo cual es el 
-			 * lugar adecuado para cerrar la conection y liberar el recurso */
-			
-			// Preguntar si la conexion todavia esta activa
-			if (connection != null) {
-				
-				// Cerrar la conexion, liberar el recurso
-				connection.close();
-			}
+		
 		}
 		
 		return empleados;
+		
+		
 	}
+
+	@Override
+	public void persistirEmpleado(Empleado empleado, List<String> numeroTelefono, List<String> direccionesCorreo) throws SQLException {
+		// TODO Auto-generated method stub
+		
+		DBConexion dbConexion = new DBConexion("root","Temp2026");
+		try {
+			
+			Connection connection = dbConexion .getConexion();
+			dbConexion.persistirEmpleado(connection, empleado,
+					numeroTelefono, direccionesCorreo);
+			
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+	}
+	
 
 }

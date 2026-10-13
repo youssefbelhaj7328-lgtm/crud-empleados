@@ -1,3 +1,7 @@
+<%@page import="com.example.model.Departamento"%>
+<%@page import="java.util.List"%>
+<%@page import="com.example.service.DepartamentoServiceImpl"%>
+<%@page import="com.example.service.DepartamentoService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -29,45 +33,70 @@ para recibir los datos del formulario -->
 	<h1>Formulario de Alta de Empleado</h1>
 	<fieldset>
 		<legend> Formulario Alta / Modificacion</legend>
-		<form action="#" method="get">
+		<form action="AltaController" method="post">
 			<label for="nombre">Nombre : </label> 
 			<input id="nombre" name="nombre"	type="text" placeholder="Su nombre aqui ,porfa"
-				title=" Se solicita nombre de empleador de alta"> 
+				title=" Se solicita nombre de empleador de alta"
+				required="required"> 
+				
 				<label for="primerApellido">Primer Apellido : </label> 
-				<input id="primerApellido" name="primerApellido" type="text"> 
+				<input id="primerApellido" name="primerApellido" type="text"
+				required="required"> 
 				<label for="segundoApellido">Segundo Apellido:</label>
 				 <input id="segundoApellido" type="text"
-				placeholder="No es obligatorio"> 
-				<label for="fechaAlta" name="fechaAlta">Fecha de	de Alta:</label> 
-				<input id="fechaAlta" type="date"> 
+				placeholder="No es obligatorio" name="segundoApellido"> 
+				<label for="fechaAlta">Fecha de	de Alta:</label> 
+				<input id="fechaAlta" type="date" name="fechaAlta"
+				required="required"> 
 				<label for="salario">Salario: </label> 
-				<input id="Salario" type="text">
+				<input id="Salario" type="text" name="salario" >
 				<fieldset>
 			<legend>Genero</legend>
 			<label for="hombre"> Hombre:</label> <input id="hombre" type="radio"
 				name="genero"value="HOMBRE"><label for="mujer"> Mujer:</label> <input
-				id="mujer" type="radio" name="genero"value="MUJER"> <label for="otro">
-				Otro:</label> <input id="otro" type="radio" name="genero">
+				id="mujer" type="radio" name="genero" value="MUJER"> <label for="otro">
+				Otro:</label> <input id="otro" type="radio" name="genero "value="OTRO" >
 			</fieldset>
 	<label for="foto">Foto del empleado:</label>
 	<input id="foto" type="file">
 	<label for="dpt">Departamento:</label>
-	<select id="dpt"name="dpto">
+	<select id="dpt"name="dpto"
+	required="required">
 		<option></option>
 		<!-- La lista de departamentos se debe de traer de la tabla 
 departamentos de la base de datos, porque de esta manera se pueden
 agregar o eliminar departamentos sin tener que modificar el codigo
 de nuestra aplicacion WEB -->
-		<option value="1">RRHH</option>
-		<option value="2">INFORMATICA</option>
-		<option value="3">CONTABILIDAD</option>
+
+<% 
+
+//  Conectarse al servicio de Departamento para recuperar 
+// una lista de todos los departamentos
+DepartamentoService  service = new DepartamentoServiceImpl();
+List <Departamento> departamentos = service.getDepartamentos();
+for (Departamento dpto : departamentos){
+	%>
+	<option value="<%=dpto.id() %>"><%=dpto.nombre() %></option>
+	<%
+}
+%>
+
+
+
+
+
+
+
+	
 	</select>
 	<label for="emails">Correo(s):</label>
 	<input id="emails" type="text"
+	name="emails"
 		placeholder="uno o varios ,separados por punto y la coma">
 
 	<label for="telefonos">Telefon(s)</label>
-	<input id="telefonos" type="text"
+	<input id="telefonos"  type="text"
+	name="telefonos"
 		placeholder="uno o varios, separados por ;"
 		title="Uno o varias direcciones de correo separadas por el punto y la coma ">
 
